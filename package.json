@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "gen-express-app": "^0.2.9"
+  }
+}
