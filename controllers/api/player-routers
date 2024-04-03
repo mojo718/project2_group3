@@ -1,0 +1,58 @@
+const router = require('express').router();
+const { player, team } = require( );//path for models
+
+    // Starting CRUD for players
+
+// route to get all players
+    router.get('/', async (req, res) => {
+
+        try {
+            const players = await player.findAll({
+                include: [{ model: player }]
+            });
+            res.status(200).json(players);
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    });
+
+// route to create new player
+router.post('/', async (req, res) => {
+
+    try {
+        const players = await player.create(req.body);
+        res.status(200).json(players);
+    } catch (err) {
+        res.status(400).json(err);
+    }
+});
+
+router.put('/:id', async (req, res) => {
+    // update a player by thier `id` value (change to name?)
+    player.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    })
+    res.status(200).json()
+  });
+
+  router.delete('/:id', (req, res) => {
+    // delete a player by its `id` value
+    try {
+      const players = await player.destroy({
+        where: {
+          id: req.params.id
+        }
+      });
+      if (!players) {
+        res.status(404).json()
+        return;
+      }
+      res.status(200).json.(players);
+    } catch (err) {
+      res.status(500).json.json(err);
+    }
+  });
+  
+  module.exports = router;
