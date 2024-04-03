@@ -1,3 +1,4 @@
+// Import Sequelize library
 const { Sequelize, DataTypes } = require('sequelize');
 
 // Create the Player model
@@ -36,3 +37,9 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false
     }
+  }, {
+    // Other options, such as tableName, timestamps, etc., can be specified here
+  });
+
+  return Player;
+};
