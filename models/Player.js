@@ -1,9 +1,10 @@
-// Import Sequelize library
-const { Sequelize, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
 
-// Create the Player model
-module.exports = (sequelize) => {
-  const Player = sequelize.define('Player', {
+class Player extends Model {}
+
+Player.init(
+  {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -13,7 +14,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    Team_id: {
+    team_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -21,11 +22,11 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    BattingAverage: {
+    battingAverage: {
       type: DataTypes.DECIMAL(5, 3),
       allowNull: false
     },
-    HomeRuns: {
+    homeRuns: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -33,13 +34,25 @@ module.exports = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    RBIS: {
+    rbis: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
-  }, {
-    // Other options, such as tableName, timestamps, etc., can be specified here
-  });
+    
+  },
+  {
+    sequelize,
+    timestamps: false,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'player',
+  }
+);
 
-  return Player;
-};
+module.exports = Player;
+
+
+
+
+
+
