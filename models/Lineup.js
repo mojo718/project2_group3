@@ -15,14 +15,22 @@ Lineup.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    manager_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'manager',
+        key: 'id',
+      }
+    },
     created_by: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      game_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    game_date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
   },
   {
     sequelize,
