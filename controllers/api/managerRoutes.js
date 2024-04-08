@@ -1,9 +1,9 @@
 const router = require('express').Router();
-const { Manager } = require('../../models');
+const { manager } = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
-    const managerData = await Manager.create(req.body);
+    const managerData = await manager.create(req.body);
 
     req.session.save(() => {
       req.session.manager_id = managerData.id;
@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const managerData = await Manager.findOne({ where: { email: req.body.email } });
+    const managerData = await manager.findOne({ where: { email: req.body.email } });
 
     if (!managerData) {
       res

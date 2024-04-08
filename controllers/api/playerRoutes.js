@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const { Player } = require('../../models');
+const { player } = require('../../models');
 
 
 router.get('/', async (req, res) => {
 
     try {
-        const players = await Player.findAll({
+        const players = await player.findAll({
             include: [{ model: Player }]
         });
         res.status(200).json(players)
@@ -18,8 +18,8 @@ router.get('/:id', async (req, res) => {
     // find one player by its `id` value
 
     try {
-        const players = await Player.findByPK(req.params.id, {
-            include: [{ model, Player }]
+        const players = await player.findByPK(req.params.id, {
+            include: [{ model }]
         });
         //conditional statement - if players not found return 404 error
         if (!players) {
@@ -35,7 +35,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     // create a new player
     try {
-        const players = await Player.create(req.body);
+        const players = await player.create(req.body);
         res.status(200).json(players);
     } catch (err) {
         res.status(400).json(err);
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     // update a player by its `id` value
-    Player.update(req.body, {
+    player.update(req.body, {
         where: {
             id: req.params.id,
         },
@@ -52,10 +52,10 @@ router.put('/:id', async (req, res) => {
     res.status(200).json()
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', (req, res) => {
     // delete a player by its `id` value
     try {
-        const players = await Player.destroy({
+        const players = await player.destroy({
             where: {
                 id: req.params.id
             }
@@ -64,7 +64,7 @@ router.delete('/:id', async (req, res) => {
             res.status(404).json()
             return;
         }
-        res.status(200).json(players);
+        res.status(200).json.(players);
     } catch (err) {
         res.status(500).json.json(err);
     }

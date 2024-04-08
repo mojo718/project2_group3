@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const { Lineup } = require('../../models');
-
-
+const { lineup } = require('../../models');
 
 router.get('/', async (req, res) => {
 
     try {
+
         const lineups = await Lineup.findAll({
             include: [{ model: lineup }]
         });
@@ -17,10 +17,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     // get a lineup by its `id` value
-
     try {
-        const lineups = await Lineup.findByPK(req.params.id, {
-            include: [{ model, Product }]
+        const lineups = await lineup.findByPK(req.params.id, {
+            include: [{ model }]
         });
         //conditional statement - if lineup not found return 404 error
         if (!lineups) {
@@ -36,7 +35,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     // create a new lineup
     try {
-        const lineups = await Lineup.create(req.body);
+        const lineups = await lineup.create(req.body);
         res.status(200).json(lineups);
     } catch (err) {
         res.status(400).json(err);
@@ -53,10 +52,11 @@ router.put('/:id', async (req, res) => {
     res.status(200).json()
 });
 
+
 router.delete('/:id', async (req, res) => {
     // delete a lineup by its `id` value
     try {
-        const lineups = await Lineup.destroy({
+        const lineups = await lineup.destroy({
             where: {
                 id: req.params.id
             }
@@ -65,10 +65,12 @@ router.delete('/:id', async (req, res) => {
             res.status(404).json()
             return;
         }
-        res.status(200).json(lineups);
+        res.status(200).json.(lineups);
     } catch (err) {
         res.status(500).json.json(err);
     }
 });
 
+
 module.exports = router;
+
