@@ -37,8 +37,15 @@ Player.init(
     rbis: {
       type: DataTypes.INTEGER,
       allowNull: false
-    }
-    
+    },
+    manager_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'manager',
+        key: 'id',
+      }
+    },
   },
   {
     sequelize,

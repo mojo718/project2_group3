@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
 
     try {
         const players = await player.findByPK(req.params.id, {
-            include: [{ model, Product }]
+            include: [{ model }]
         });
         //conditional statement - if players not found return 404 error
         if (!players) {
