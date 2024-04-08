@@ -12,31 +12,33 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
-  <div class="flex-column justify-space-around">
-    <header class="display-flex justify-space-between align-center p-2">
-      <h1>
-        <a href="/">Lineup Manager</a>
-      </h1>
-      <nav>
-        <a class="homeBtn" href="/homepage">Home</a> 
+<body class="container-fluid">
+
+    <header class="row text-center bg-info display-flex justify-space-between p-2">
+      <h1>Lineup Manager</h1>
+      
+      <nav class="d-flex flex-row justify-content-around align-items-end">
+        <a class="homeBtn btn btn-info" href="/">Home</a> 
         <!-- Conditionally render login or logout links -->
         {{#if logged_in}}
-        <a href="/profile">profile</a> |
-        <button class="no-button" id="logout">logout</button>
+        <a href="/profile">Profile</a> |
+        <a class="btn btn-info" id="logout">Logout</button>
         {{else}}
-        <a href="/login">login</a>
+        <a class="btn btn-info" href="/login">Login</a>
         {{/if}}
       </nav>
     </header>
     <main class="container container-fluid mt-5">
-      <!-- Render the sub layout -->
-      {{{ body }}}
+     
+     
+     {{{ body }}}
+   
+   
+   
     </main>
     <footer>
       
     </footer>
-  </div>
 
   <!-- Render script for logged in users only -->
   {{#if logged_in}}
