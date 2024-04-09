@@ -1,5 +1,14 @@
 const router = require('express').Router();
+const winston = require('winston'); // Import Winston
 const { manager } = require('../../models');
+
+// Winston logger configuration
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
 
 router.post('/', async (req, res) => {
   try {
@@ -11,8 +20,14 @@ router.post('/', async (req, res) => {
 
       res.status(200).json(managerData);
     });
+
+   
+    logger.info('New manager created successfully');
   } catch (err) {
     res.status(400).json(err);
+
+   
+    logger.error(`Error occurred while creating a new manager: ${err}`);
   }
 });
 
@@ -43,8 +58,13 @@ router.post('/login', async (req, res) => {
       res.json({ manager: managerData, message: 'You are now logged in!' });
     });
 
+   
+    logger.info(`Manager ${managerData.email} logged in successfully`);
   } catch (err) {
     res.status(400).json(err);
+
+   
+    logger.error(`Error occurred while logging in: ${err}`);
   }
 });
 
@@ -56,6 +76,9 @@ router.post('/logout', (req, res) => {
   } else {
     res.status(404).end();
   }
+
+ 
+  logger.info('Manager logged out successfully');
 });
 
 module.exports = router;
