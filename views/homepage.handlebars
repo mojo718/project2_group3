@@ -1,6 +1,32 @@
-<!-- Loop over each object in the projects array -->
-{{#each lineups as |lineup| }}
-<div class=".container">
+<button class="btn btn-primary">Create New Lineup</button>
 
+{{#each lineups as |lineup| }}
+ <div class="row text-center">
+  <h1>{{manager.name}}'s Team</h1>
+</div>
+<div class="row">
+  <table class="table table-hover table-primary table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Order</th>
+      <th scope="col">Name</th>
+      <th scope="col">Position</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {{#each players as |player| }}
+    <tr>
+      <th scope="row">{{player.position}}</th>
+      <td>{{player.name}}</td>
+      <td>{{player.hits}}</td>
+      <td>{{player.battingAverage}}</td>
+      <td>{{player.homeRuns}}</td>
+      <td>{{player.rbis}}</td>
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>
 </div>
 {{/each}}
