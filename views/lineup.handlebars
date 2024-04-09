@@ -1,8 +1,33 @@
-<div class="text-center">
-  <h2>{{name}}</h2>
-  <p>{{description}}</p>
-  <p>Created by {{user.name}} on {{format_date date_created}}</p>
-  <p>
-    <button class="btn btn-primary">Email Lineup</button>
-  </p>
+    {{#each players as |player| }}
+   <div class="row text-center">
+  <h1>Set Lineup </h1>
 </div>
+<div class="row">
+  <table class="table table-hover table-primary table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Position</th>
+      <th scope="col">Name</th>
+      <th scope="col">Hits</th>
+      <th scope="col">Avg</th>
+      <th scope="col">HRs</th>
+      <th scope="col">RBIs</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {{#each players as |player| }}
+    <tr>
+      <th scope="row">{{player.position}}</th>
+      <td>{{player.name}}</td>
+      <td>{{player.hits}}</td>
+      <td>{{player.battingAverage}}</td>
+      <td>{{player.homeRuns}}</td>
+      <td>{{player.rbis}}</td>
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>
+</div>
+    {{/each}}
