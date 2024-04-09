@@ -4,11 +4,12 @@ const { Manager, Player, Lineup } = require('../../models');
 
 // Winston logger configuration
 const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
-});
+    transports: [
+      new winston.transports.Console(),
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'Manager.log') }) // Log file in /logs folder
+    ]
+  });
+
 
 router.post('/', async (req, res) => {
   try {
