@@ -1,8 +1,11 @@
 const router = require('express').Router();
 const winston = require('winston'); // Import Winston
 const { Manager, Player, Lineup } = require('../../models');
+const path = require('path')
 
 // Winston logger configuration
+const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
+
 const logger = winston.createLogger({
     transports: [
       new winston.transports.Console(),

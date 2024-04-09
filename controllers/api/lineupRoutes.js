@@ -12,7 +12,7 @@ const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted pat
 const logger = winston.createLogger({
     transports: [
       new winston.transports.Console(),
-      new winston.transports.File({ filename: path.join(logsFolderPath, 'player.log') }) // Log file in /logs folder
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'lineup.log') }) // Log file in /logs folder
     ]
   });
 
