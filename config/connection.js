@@ -16,7 +16,7 @@ const logger = winston.createLogger({
 
 // Create Sequelize instance using the ClearDB database URL
 const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
-      dialect: 'mysql',
+  dialect: 'mysql',
   logging: (msg) => logger.info(msg) // Use Winston logger for Sequelize logging
 });
 
@@ -30,3 +30,4 @@ sequelize.authenticate()
   });
 
 module.exports = sequelize;
+
