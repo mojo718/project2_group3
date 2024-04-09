@@ -6,7 +6,7 @@ const { manager } = require('../../models');
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'combined.log' })
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'Manager.log') }) // Log file in /logs folder
   ]
 });
 

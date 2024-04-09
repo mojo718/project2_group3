@@ -1,21 +1,32 @@
 const Sequelize = require('sequelize');
 require('dotenv').config();
+const winston = require('winston');
+const path = require('path');
 
-let sequelize;
+// Construct the path to the logs folder
+const logsFolderPath = path.join(__dirname, '..', 'logs');
 
-if (process.env.JAWSDB_URL) {
-  sequelize = new Sequelize(process.env.JAWSDB_URL);
-} else {
-  sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
-    {
-      host: 'localhost',
+// Configure Winston logger
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: path.join(logsFolderPath, 'sequelize.log') }) // Log file in /logs folder
+  ]
+});
+
+// Create Sequelize instance using the ClearDB database URL
+const sequelize = new Sequelize(process.env.CLEARDB_DATABASE_URL, {
       dialect: 'mysql',
-      port: 3306
-    }
-  );
-}
+  logging: (msg) => logger.info(msg) // Use Winston logger for Sequelize logging
+});
+
+// Test the connection
+sequelize.authenticate()
+  .then(() => {
+    logger.info('Connection has been established successfully.');
+  })
+  .catch(err => {
+    logger.error('Unable to connect to the database:', err);
+  });
 
 module.exports = sequelize;

@@ -3,10 +3,12 @@ const winston = require('winston'); // Import Winston
 const { player } = require('../../models');
 
 // Winston logger configuration
+const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
+
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'combined.log' })
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'player.log') }) // Log file in /logs folder
   ]
 });
 

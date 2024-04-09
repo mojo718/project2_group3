@@ -1,12 +1,16 @@
 const router = require('express').Router();
 const winston = require('winston');
+const path = require('path');
 const { Lineup } = require('../../models');
 const { lineup } = require('../../models');
+
+// Constructed path to the logs folder
+const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
 
 const logger = winston.createLogger({
     transports: [
       new winston.transports.Console(),
-      new winston.transports.File({ filename: 'combined.log' })
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'player.log') }) // Log file in /logs folder
     ]
   });
 
@@ -86,4 +90,3 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
-
