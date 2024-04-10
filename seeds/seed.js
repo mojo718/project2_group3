@@ -1,25 +1,35 @@
 const sequelize = require('../config/connection');
-const { User, Project } = require('../models');
+const { Manager, Player, Lineup } = require('../models');
 
-const userData = require('./userData.json');
-const projectData = require('./projectData.json');
+const managerData = require('./managerData.json');
+const playerData = require('./playerData.json');
+const lineupData = require('./lineupData.json');
 
 const seedDatabase = async () => {
   await sequelize.sync({ force: true });
 
-  const users = await User.bulkCreate(userData, {
-    individualHooks: true,
-    returning: true,
-  });
+  try {
+    // Insert manager data
+    const managers = await Manager.bulkCreate(managerData);
+    console.log(`${managers.length} managers inserted.`);
 
-  for (const project of projectData) {
-    await Project.create({
-      ...project,
-      user_id: users[Math.floor(Math.random() * users.length)].id,
-    });
+    // Insert player data
+    const players = await Player.bulkCreate(playerData);
+    console.log(`${players.length} players inserted.`);
+
+    // Insert lineup data
+    for (const lineup of lineupData) {
+      const createdLineup = await Lineup.create(lineup);
+      console.log(`Lineup created with ID: ${createdLineup.id}`);
+      // Associate players with the lineup
+      await createdLineup.setPlayers(lineup.players);
+      console.log(`Players associated with lineup.`);
+    }
+
+    console.log('Seeding completed.');
+  } catch (err) {
+    console.error('Error seeding database:', err);
   }
-
-  process.exit(0);
 };
 
 seedDatabase();
