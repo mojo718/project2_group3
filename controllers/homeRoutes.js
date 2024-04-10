@@ -2,6 +2,7 @@ const router = require('express').Router();
 const winston = require('winston'); // Import Winston
 const { Manager, Lineup, Player } = require('../models');
 const withAuth = require('../utils/auth');
+const path = require('path')
 
 // Winston logger configuration
 const logsFolderPath = path.join(__dirname, '..', 'logs'); // Adjusted path
