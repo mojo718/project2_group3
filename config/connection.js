@@ -4,13 +4,13 @@ const winston = require('winston');
 const path = require('path');
 
 // Construct the path to the logs folder
-//const logsFolderPath = path.join(__dirname, '..', 'logs');  //or use '../logs'
+const logsFolderPath = path.join(__dirname, '..', 'logs'); 
 
 // Configure Winston logger
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: path.join('../logs', 'sequelize.log') }) // Log file in /logs folder
+    new winston.transports.File({ filename: path.join(logsFolderPath, 'sequelize.log') }) // Log file in /logs folder
   ]
 });
 
