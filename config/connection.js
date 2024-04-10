@@ -3,7 +3,7 @@ require('dotenv').config();
 const winston = require('winston');
 const path = require('path');
 
-// Construct the path to the logs  folder
+// Construct the path to the logs folder
 const logsFolderPath = path.join(__dirname, '..', 'logs'); 
 
 // Configure Winston logger
