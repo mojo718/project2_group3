@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Function to dynamically load lineup.js file
+// Function to dynamically load lineup.js file - not sure if this section is correct
 function loadLineupScript() {
     var script = document.createElement('script');
     script.src = './js/lineup.js';
