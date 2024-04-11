@@ -62,7 +62,7 @@ router.get('/', withAuth, async (req, res) => {
 
 router.get('/:id', withAuth, async (req, res) => {
     try {
-        const lineups = await Lineup.findByPK(req.params.id, {
+        const lineups = await Lineup.findByPk(req.params.id, {
             include: [{ model: Player, through: 'PlayerLineup' }],
             where: {
                 id: req.params.id,
