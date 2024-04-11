@@ -3,6 +3,7 @@ const winston = require('winston'); // Import Winston
 const { Manager, Player, Lineup } = require('../../models');
 const path = require('path')
 
+
 // Winston logger configuration
 const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
 
@@ -13,49 +14,79 @@ const logger = winston.createLogger({
     ]
   });
 
-
-router.post('/', async (req, res) => {
-  try {
-    const managerData = await Manager.create(req.body);
-    req.session.save(() => {
-      req.session.manager_id = managerData.id;
-      req.session.logged_in = true;
-      res.status(200).json(managerData);
-    });
-    logger.info('New manager created successfully');
-  } catch (err) {
-    res.status(400).json(err);
-    logger.error(`Error occurred while creating a new manager: ${err}`);
-  }
-});
-
+// Login route
 router.post('/login', async (req, res) => {
   try {
-    const managerData = await Manager.findOne({ where: { email: req.body.email } });
-    if (!managerData) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
+    const { email, password } = req.body;
+
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
     }
-    const validPassword = await managerData.checkPassword(req.body.password);
-    if (!validPassword) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
+
+    // Check if a manager with the provided email exists
+    const manager = await Manager.findOne({ where: { email } });
+    if (!manager) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
     }
+
+    // Check if the password is correct
+    const isValidPassword = await manager.checkPassword(password);
+    if (!isValidPassword) {
+      return res.status(401).json({ message: 'Invalid email or password.' });
+    }
+
+    // If everything is correct, set the session and redirect to the profile page
     req.session.save(() => {
-      req.session.manager_id = managerData.id;
       req.session.logged_in = true;
-      res.json({ manager: managerData, message: 'You are now logged in!' });
+      req.session.manager_id = manager.id;
+      res.redirect('/profile');
     });
-    logger.info(`Manager ${managerData.email} logged in successfully`);
   } catch (err) {
-    res.status(400).json(err);
-    logger.error(`Error occurred while logging in: ${err}`);
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+// Signup route
+router.post('/signup', async (req, res) => {
+  try {
+    console.log('Received signup request:', req.body); // Log the received request body
+
+    const { name, email, password } = req.body;
+
+    // Check if all required fields are provided
+    if (!name || !email || !password) {
+      console.log('Missing required fields:', { name, email, password }); // Log missing fields
+      return res.status(400).json({ message: 'Name, email, and password are required.' });
+    }
+
+    // Check if a manager with the provided email already exists
+    const existingManager = await Manager.findOne({ where: { email } });
+    if (existingManager) {
+      console.log('Email is already in use:', email); // Log existing email
+      return res.status(400).json({ message: 'Email is already in use.' });
+    }
+
+    // Create a new manager
+    const manager = await Manager.create({ name, email, password });
+    console.log('New manager created:', manager.toJSON()); // Log the newly created manager
+
+    // If successfully created, set the session and redirect to the profile page
+    req.session.save(() => {
+      req.session.logged_in = true;
+      req.session.manager_id = manager.id;
+      console.log('Session saved:', req.session); // Log saved session
+      res.redirect('/profile');
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
 
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {

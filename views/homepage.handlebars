@@ -1,34 +1,44 @@
-<button class="btn btn-primary" id="createLineup">Create New Lineup</button>
+{{#if isLoggedIn}}
+<h1>Welcome, {{ manager_name }}</h1>
 
-{{#each lineups as |lineup| }}
- <div class="row text-center">
-  <h1>{{manager.name}}'s Team</h1>
-</div>
-<div class="row">
-  <table class="table table-hover table-primary table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Order</th>
-      <th scope="col">Name</th>
-      <th scope="col">Position</th>
-    </tr>
-  </thead>
-  <tbody>
+<button id="showFormButton" class="btn btn-primary">Create Lineup</button>
 
-    {{#each players as |player| }}
-    <tr>
-      <th scope="row">{{player.position}}</th>
-      <td>{{player.name}}</td>
-      <td>{{player.hits}}</td>
-      <td>{{player.battingAverage}}</td>
-      <td>{{player.homeRuns}}</td>
-      <td>{{player.rbis}}</td>
-    </tr>
+<form id="lineupForm">
+    <div class="form-group">
+        <label for="managerName">Manager Name:</label>
+        <input type="text" id="managerName" name="managerName" value="{{ managerName }}" required>
+    </div>
+    <div class="form-group">
+        <label for="gameDate">Game Date:</label>
+        <input type="date" id="gameDate" name="gameDate" required>
+    </div>
+    <div class="form-group">
+        <label for="players">Select Players:</label>
+        <select id="players" name="players" multiple required>
+            {{#each players}}
+                <option value="{{ id }}">{{ name }}</option>
+            {{/each}}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Lineup</button>
+</form>
+
+<div id="lineupList">
+    {{#each lineups}}
+        <div class="lineup" data-lineup-id="{{ id }}">
+            <p>{{ date }}</p>
+        </div>
     {{/each}}
-
-  </tbody>
-</table>
 </div>
-{{/each}}
 
-<script src="../public/js/homepage.js"></script>
+<div id="lineupDetails" style="display: none;">
+    <h2>Lineup Details</h2>
+    <p><strong>Manager Name:</strong> <span id="detailsManagerName"></span></p>
+    <p><strong>Game Date:</strong> <span id="detailsGameDate"></span></p>
+    <p><strong>Players:</strong></p>
+    <ul id="detailsPlayers"></ul>
+</div>
+{{/if}}
+
+
+<script src="./js/homepage.js"></script>

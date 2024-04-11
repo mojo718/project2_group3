@@ -1,56 +1,64 @@
 const router = require('express').Router();
-const winston = require('winston'); // Import Winston
+const winston = require('winston');
 const { Manager, Lineup, Player } = require('../models');
 const withAuth = require('../utils/auth');
-const path = require('path')
+const path = require('path');
 
 // Winston logger configuration
-const logsFolderPath = path.join(__dirname, '..', 'logs'); // Adjusted path
+const logsFolderPath = path.join(__dirname, '..', 'logs');
 
 const logger = winston.createLogger({
-    transports: [
-      new winston.transports.Console(),
-      new winston.transports.File({ filename: path.join(logsFolderPath, 'homeRoutes.log') }) // Log file in /logs folder
-    ]
-  });
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: path.join(logsFolderPath, 'homeRoutes.log') })
+  ]
+});
+
 router.get('/', async (req, res) => {
   try {
-    res.render('homepage');
-    logger.info('Homepage rendered successfully')
+    if (req.session.logged_in) {
+      const lineups = await Lineup.findAll({
+        where: {
+          manager_id: req.session.manager_id
+        },
+      });
+      res.render('homepage', { lineups });
+    } else {
+      res.render('homepage');
+    }
   } catch (err) {
-    res.status(500).json(err);
-    logger.error(`Error occurred while rendering home: ${err}`);
+    console.error(err);
+    res.status(500).send('Internal Server Error');
   }
 });
 
 router.get('/profile', withAuth, async (req, res) => {
   try {
-    const managerData = await Manager.findByPk(req.session.user_id, {
+    // Fetch manager data and players
+    const managerData = await Manager.findByPk(req.session.manager_id, {
       attributes: { exclude: ['password'] },
-      include: [{ model: Player, model: Lineup }],
+      include: { model: Player },
     });
-
-    const manager = managerData.get({ plain: true });
-
+    
+    // Render the 'profile' template passing in data
     res.render('profile', {
-      ...manager,
-      logged_in: true
+      isLoggedIn: true, // Assuming this variable determines if the user is logged in
+      manager: managerData.toJSON(), // Assuming managerData is in the correct format
+      players: managerData.players.map(player => player.toJSON()), // Assuming players are in the correct format
     });
-    logger.info('Profile rendered successfully');
   } catch (err) {
+    // Handle errors
+    console.error(err);
     res.status(500).json(err);
-    logger.error(`Error occurred while rendering profile: ${err}`);
   }
 });
 
+
+
 router.get('/login', (req, res) => {
-  if (req.session.logged_in) {
-    res.redirect('/profile');
-    return;
-  }
-  
   res.render('login');
   logger.info('Login page rendered successfully');
 });
 
 module.exports = router;
+

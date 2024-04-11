@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
-class Lineup extends Model {}
+class LineupPlayer extends Model {}
 
-Lineup.init(
+LineupPlayer.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,17 +11,21 @@ Lineup.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    manager_id: {
+    lineup_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'manager',
+        model: 'lineup',
         key: 'id',
       }
     },
-    game_date: {
-      type: DataTypes.DATE,
+    player_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: 'player',
+        key: 'id',
+      }
     },
   },
   {
@@ -29,9 +33,8 @@ Lineup.init(
     timestamps: false,
     freezeTableName: true,
     underscored: true,
-    modelName: 'lineup',
+    modelName: 'lineup_player',
   }
 );
 
-module.exports = Lineup;
-
+module.exports = LineupPlayer;
