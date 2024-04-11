@@ -18,7 +18,7 @@ Player.init(
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    Position: {
+    position: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -30,7 +30,7 @@ Player.init(
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    Hits: {
+    hits: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
