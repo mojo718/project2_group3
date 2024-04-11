@@ -35,9 +35,6 @@ Manager.init(
         len: [8],
       },
     },
-    team_id:{
-    type: DataTypes.INTEGER
-    }
   },
   {
     hooks: {
