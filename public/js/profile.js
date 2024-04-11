@@ -1,47 +1,79 @@
-const newFormHandler = async (event) => {
+const newPlayer = async (event) => {
   event.preventDefault();
 
-  const name = document.querySelector('#project-name').value.trim();
-  const needed_funding = document.querySelector('#project-funding').value.trim();
-  const description = document.querySelector('#project-desc').value.trim();
-
-  if (name && needed_funding && description) {
-    const response = await fetch(`/api/projects`, {
+  const name = document.querySelector('#addName').value.trim();
+  const position = document.querySelector('#addPosition').value.trim();
+  
+  if (name && position) {
+    const response = await fetch(`/api/players`, {
       method: 'POST',
-      body: JSON.stringify({ name, needed_funding, description }),
+      body: JSON.stringify({ name, position }),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (response.ok) {
-      document.location.replace('/profile');
+      console.log("New Player Created");
     } else {
-      alert('Failed to create project');
+      alert('Failed to create player');
     }
   }
 };
 
-const delButtonHandler = async (event) => {
-  if (event.target.hasAttribute('data-id')) {
-    const id = event.target.getAttribute('data-id');
+const delPlayer = async (event) => {
+  event.preventDefault();
+  const name = document.querySelector('#deleteName').value.trim();
 
-    const response = await fetch(`/api/projects/${id}`, {
+    const response = await fetch(`/api/players`, {
       method: 'DELETE',
     });
 
     if (response.ok) {
-      document.location.replace('/profile');
+      console.log('Player Deleted');
     } else {
-      alert('Failed to delete project');
+      alert('Failed to delete player');
+    }
+  };
+
+const updatePlayer = async (event) => {
+  event.preventDefault();
+
+  const name = document.querySelector('#updateName').value.trim();
+  const position = document.querySelector('#updatePosition').value.trim();
+  const hits = document.querySelector('#updateHits').value.trim();
+  const avg = document.querySelector('#updateAvg').value.trim();
+  const hr = document.querySelector('#updateHr').value.trim();
+  const rbis = document.querySelector('#updateRbis').value.trim();
+  
+  
+  
+  
+  if (name && position) {
+    const response = await fetch(`/api/players`, {
+      method: 'PUT',
+      body: JSON.stringify({ name, position }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      console.log("Player Updated");
+    } else {
+      alert('Failed to update player');
     }
   }
 };
 
 document
-  .querySelector('.new-project-form')
-  .addEventListener('submit', newFormHandler);
+  .querySelector('.addPlayer')
+  .addEventListener('submit', newPlayer);
 
 document
-  .querySelector('.project-list')
-  .addEventListener('click', delButtonHandler);
+  .querySelector('.deletePlayer')
+  .addEventListener('click', delPlayer);
+
+  document
+  .querySelector('.updatePlayer')
+  .addEventListener('click', updatePlayer);
