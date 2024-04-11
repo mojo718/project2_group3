@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const winston = require('winston'); // Import Winston
 const { Player } = require('../../models');
+const withAuth = require('../../utils/auth');
 const path = require('path')
 
 // Winston logger configuration
@@ -13,10 +14,13 @@ const logger = winston.createLogger({
     ]
   });
 
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
     try {
-        const players = await Player.create(req.body);
-        res.status(200).json(players);
+        const newPlayer = await Player.create({
+            ...req.body,
+            manager_id: req.session.manager_id,
+        });
+        res.status(200).json(newPlayer);
         logger.info('Successfully created a new player');
     } catch (err) {
         res.status(400).json(err);
@@ -24,11 +28,12 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', withAuth, async (req, res) => {
     try {
         await Player.update(req.body, {
             where: {
                 id: req.params.id,
+                manager_id: req.session.manager_id,
             },
         });
         res.status(200).json();
@@ -39,9 +44,13 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
     try {
-        const players = await Player.findAll();
+        const players = await Player.findAll({
+            where: {
+                manager_id: req.session.manager_id,
+            },
+        });
         res.status(200).json(players);
         logger.info('Successfully fetched all players');
     } catch (err) {
@@ -50,9 +59,14 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', withAuth, async (req, res) => {
     try {
-        const players = await Playerlayer.findByPk(req.params.id);
+        const players = await Player.findByPk({
+            where: {
+                id: req.params.id,
+                manager_id: req.session.manager_id,
+            },
+        });
         if (!players) {
             res.status(404).json({ message: 'No player found with this id!' });
             return;
@@ -65,18 +79,19 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
     try {
-        const players = await Player.destroy({
+        const player = await Player.destroy({
             where: {
-                id: req.params.id
-            }
+                id: req.params.id,
+                manager_id: req.session.manager_id,
+            },
         });
         if (!players) {
             res.status(404).json();
             return;
         }
-        res.status(200).json(players);
+        res.status(200).json(player);
         logger.info(`Successfully deleted player with id ${req.params.id}`);
     } catch (err) {
         res.status(500).json(err);

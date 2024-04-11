@@ -1,10 +1,8 @@
 const router = require('express').Router();
 const winston = require('winston');
-
-const path = require('path');
-const { lineup } = require('../../models');
 const { Lineup, Player } = require('../../models');
-
+const withAuth = require('../../utils/auth');
+const path = require('path');
 
 // Constructed path to the logs folder
 const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
@@ -16,10 +14,13 @@ const logger = winston.createLogger({
     ]
   });
 
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
     try {
-        const lineups = await Lineup.create(req.body);
-        res.status(200).json(lineups);
+        const newLineup = await Lineup.create({
+            ...req.body,
+            manager_id: req.session.manager_id,
+        });
+        res.status(200).json(newLineup);
         logger.info('Successfully created a new lineup');
     } catch (err) {
         res.status(400).json(err);
@@ -27,11 +28,12 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', withAuth, async (req, res) => {
     try {
         await Lineup.update(req.body, {
             where: {
                 id: req.params.id,
+                manager_id: req.session.manager_id,
             },
         });
         res.status(200).json();
@@ -42,10 +44,13 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
     try {
         const lineups = await Lineup.findAll({
-            include: [{ model: Player, through: 'PlayerLineup' }]
+            include: [{ model: Player, through: 'PlayerLineup' }],
+            where: {
+                manager_id: req.session.manager_id,
+            },
           });
         res.status(200).json(lineups);
         logger.info('Successfully fetched all lineups');
@@ -55,10 +60,14 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', withAuth, async (req, res) => {
     try {
         const lineups = await Lineup.findByPK(req.params.id, {
-            include: [{ model: Player, through: 'PlayerLineup' }]
+            include: [{ model: Player, through: 'PlayerLineup' }],
+            where: {
+                id: req.params.id,
+                manager_id: req.session.manager_id,
+            },
           });
         if (!lineups) {
             res.status(404).json({ message: 'No lineup found with this id!' });
@@ -72,11 +81,12 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
     try {
         const lineups = await Lineup.destroy({
             where: {
-                id: req.params.id
+                id: req.params.id,
+                manager_id: req.session.manager_id,
             }
         });
         if (!lineups) {
