@@ -83,7 +83,7 @@ router.delete('/:id', withAuth, async (req, res) => {
     try {
         const player = await Player.destroy({
             where: {
-                id: req.params.id,
+                name: req.body.name,
                 manager_id: req.session.manager_id,
             },
         });
@@ -92,10 +92,10 @@ router.delete('/:id', withAuth, async (req, res) => {
             return;
         }
         res.status(200).json(player);
-        logger.info(`Successfully deleted player with id ${req.params.id}`);
+        logger.info(`Successfully deleted player with name: ${req.body.name}`);
     } catch (err) {
         res.status(500).json(err);
-        logger.error(`Error occurred while deleting player with id ${req.params.id}: ${err}`);
+        logger.error(`Error occurred while deleting player with name: ${req.body.id}: ${err}`);
     }
 });
 

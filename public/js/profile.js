@@ -14,7 +14,7 @@ const newPlayer = async (event) => {
     });
 
     if (response.ok) {
-      console.log("New Player Created");
+      alert("New Player Created");
     } else {
       alert('Failed to create player');
     }
@@ -27,6 +27,7 @@ const delPlayer = async (event) => {
 
     const response = await fetch(`/api/players`, {
       method: 'DELETE',
+      body: JSON.stringify({ name }),
     });
 
     if (response.ok) {
@@ -42,17 +43,15 @@ const updatePlayer = async (event) => {
   const name = document.querySelector('#updateName').value.trim();
   const position = document.querySelector('#updatePosition').value.trim();
   const hits = document.querySelector('#updateHits').value.trim();
-  const avg = document.querySelector('#updateAvg').value.trim();
-  const hr = document.querySelector('#updateHr').value.trim();
+  const battingAvg = document.querySelector('#updateAvg').value.trim();
+  const homeRuns = document.querySelector('#updateHr').value.trim();
   const rbis = document.querySelector('#updateRbis').value.trim();
   
   
-  
-  
-  if (name && position) {
+  if (name && position && hits && battingAvg && homeRuns && rbis) {
     const response = await fetch(`/api/players`, {
       method: 'PUT',
-      body: JSON.stringify({ name, position }),
+      body: JSON.stringify({ name, position, hits, battingAvg, homeRuns, rbis }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -64,6 +63,9 @@ const updatePlayer = async (event) => {
       alert('Failed to update player');
     }
   }
+  else {
+    alert('All fields must be populated to update player!');
+  }
 };
 
 document
@@ -74,6 +76,6 @@ document
   .querySelector('.deletePlayer')
   .addEventListener('click', delPlayer);
 
-  document
+document
   .querySelector('.updatePlayer')
   .addEventListener('click', updatePlayer);
