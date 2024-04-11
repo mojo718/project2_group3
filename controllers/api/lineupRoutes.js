@@ -4,15 +4,13 @@ const { Lineup, Player } = require('../../models');
 const withAuth = require('../../utils/auth');
 const path = require('path');
 
-// Constructed path to the logs folder
-const logsFolderPath = path.join(__dirname, '..', '..', 'logs'); // Adjusted path
-
+const logsFolderPath = path.join(__dirname, '..', '..', 'logs');
 const logger = winston.createLogger({
     transports: [
       new winston.transports.Console(),
-      new winston.transports.File({ filename: path.join(logsFolderPath, 'lineup.log') }) // Log file in /logs folder
+      new winston.transports.File({ filename: path.join(logsFolderPath, 'lineup.log') })
     ]
-  });
+});
 
 router.post('/', withAuth, async (req, res) => {
     try {
@@ -23,8 +21,8 @@ router.post('/', withAuth, async (req, res) => {
         res.status(200).json(newLineup);
         logger.info('Successfully created a new lineup');
     } catch (err) {
-        res.status(400).json(err);
-        logger.error(`Error occurred while creating a new lineup: ${err}`);
+        res.status(400).json({ error: err.message }); 
+        logger.error(`Error occurred while creating a new lineup: ${err.message}`);
     }
 });
 
@@ -36,11 +34,11 @@ router.put('/:id', withAuth, async (req, res) => {
                 manager_id: req.session.manager_id,
             },
         });
-        res.status(200).json();
+        res.status(204).json();
         logger.info(`Successfully updated lineup with id ${req.params.id}`);
     } catch (err) {
-        res.status(500).json(err);
-        logger.error(`Error occurred while updating lineup with id ${req.params.id}: ${err}`);
+        res.status(500).json({ error: err.message });
+        logger.error(`Error occurred while updating lineup with id ${req.params.id}: ${err.message}`);
     }
 });
 
@@ -51,55 +49,50 @@ router.get('/', withAuth, async (req, res) => {
             where: {
                 manager_id: req.session.manager_id,
             },
-          });
+        });
         res.status(200).json(lineups);
         logger.info('Successfully fetched all lineups');
     } catch (err) {
-        res.status(500).json(err);
-        logger.error(`Error occurred while fetching lineups: ${err}`);
+        res.status(500).json({ error: err.message });
+        logger.error(`Error occurred while fetching lineups: ${err.message}`);
     }
 });
 
 router.get('/:id', withAuth, async (req, res) => {
     try {
-        const lineups = await Lineup.findByPk(req.params.id, {
+        const lineup = await Lineup.findByPk(req.params.id, {
             include: [{ model: Player, through: 'PlayerLineup' }],
-            where: {
-                id: req.params.id,
-                manager_id: req.session.manager_id,
-            },
-          });
-        if (!lineups) {
+        });
+        if (!lineup || lineup.manager_id !== req.session.manager_id) {
             res.status(404).json({ message: 'No lineup found with this id!' });
             return;
         }
-        res.status(200).json(lineups);
+        res.status(200).json(lineup);
         logger.info(`Successfully fetched lineup with id ${req.params.id}`);
-    } catch (error) {
-        res.status(500).json(err);
-        logger.error(`Error occurred while fetching lineup with id ${req.params.id}: ${err}`);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+        logger.error(`Error occurred while fetching lineup with id ${req.params.id}: ${err.message}`);
     }
 });
 
 router.delete('/:id', withAuth, async (req, res) => {
     try {
-        const lineups = await Lineup.destroy({
+        const deletedCount = await Lineup.destroy({
             where: {
                 id: req.params.id,
                 manager_id: req.session.manager_id,
             }
         });
-        if (!lineups) {
-            res.status(404).json();
+        if (deletedCount === 0) {
+            res.status(404).json({ message: 'No lineup found with this id!' });
             return;
         }
-        res.status(200).json(lineups);
+        res.status(204).json();
         logger.info(`Successfully deleted lineup with id ${req.params.id}`);
     } catch (err) {
-        res.status(500).json(err);
-        logger.error(`Error occurred while deleting lineup with id ${req.params.id}: ${err}`);
+        res.status(500).json({ error: err.message });
+        logger.error(`Error occurred while deleting lineup with id ${req.params.id}: ${err.message}`);
     }
 });
 
 module.exports = router;
-
