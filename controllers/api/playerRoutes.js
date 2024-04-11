@@ -87,7 +87,7 @@ router.delete('/:id', withAuth, async (req, res) => {
                 manager_id: req.session.manager_id,
             },
         });
-        if (!players) {
+        if (!player) {
             res.status(404).json();
             return;
         }
