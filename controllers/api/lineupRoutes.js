@@ -14,10 +14,15 @@ const logger = winston.createLogger({
 
 router.post('/', withAuth, async (req, res) => {
     try {
-        const newLineup = await Lineup.create({
-            ...req.body,
-            manager_id: req.session.manager_id,
-        });
+        
+        let lineupTeam = [];
+        for (let i = 0; i < req.body.players.length; i++) {
+            let individual = { manager_id: req.session.manager_id, 
+            game_date: req.body.game_date, player_name: req.body.players[i] };
+            lineupTeam = lineupTeam.push(individual);
+        }
+
+        const newLineup = await Lineup.bulkCreate(lineupTeam);
         res.status(200).json(newLineup);
         logger.info('Successfully created a new lineup');
     } catch (err) {

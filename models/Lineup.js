@@ -11,7 +11,7 @@ Lineup.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    player_id: {
+   player_name: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -23,12 +23,8 @@ Lineup.init(
         key: 'id',
       }
     },
-    created_by: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     game_date: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },
