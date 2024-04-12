@@ -1,85 +1,54 @@
- <div class="row text-center">
+{{#if isLoggedIn}}
+<div class="row text-center">
   <h1>{{manager.name}}'s Team</h1>
 </div>
-<div class="row">
-  <table class="table table-hover table-primary table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Position</th>
-      <th scope="col">Name</th>
-      <th scope="col">Hits</th>
-      <th scope="col">Avg</th>
-      <th scope="col">HRs</th>
-      <th scope="col">RBIs</th>
-    </tr>
-  </thead>
-  <tbody>
 
-    {{#each players as |player| }}
-    <tr>
-      <th scope="row">{{player.position}}</th>
-      <td>{{player.name}}</td>
-      <td>{{player.hits}}</td>
-      <td>{{player.battingAverage}}</td>
-      <td>{{player.homeRuns}}</td>
-      <td>{{player.rbis}}</td>
-    </tr>
-    {{/each}}
+<button id="deleteAccountButton" class="btn btn-danger">Delete Account</button>
 
-  </tbody>
-</table>
-</div>
-     
- <form class="bg-light addPlayer">
+<button id="addPlayerButton" class="btn btn-primary">Add Player</button>
+
+<form id="playerForm" class="bg-light">
   <div class="mb-3">
     <h2>Add a Player</h2>
-    <label for="addName" class="form-label">Player Last Name</label>
+    <label for="addName" class="form-label">Player Name</label>
     <input type="text" class="form-control" id="addName">
   </div>
   <div class="mb-3">
     <label for="addPosition" class="form-label">Player Position</label>
     <input type="text" class="form-control" id="addPosition">
   </div>
-  <button type="submit" class="btn btn-danger">Submit</button>
-</form>  
-<br>
- <form class="bg-light updatePlayer">
   <div class="mb-3">
-    <h2>Update Player Details</h2>
-    <label for="playerName" class="form-label">Player Last Name</label>
-    <input type="text" class="form-control" id="playerName">
+    <label for="addBattingAverage" class="form-label">Batting Average</label>
+    <input type="text" class="form-control" id="addBattingAverage">
   </div>
   <div class="mb-3">
-    <label for="updatePosition" class="form-label">Player Position</label>
-    <input type="text" class="form-control" id="updatePosition">
+    <label for="addHomeRuns" class="form-label">Home Runs</label>
+    <input type="text" class="form-control" id="addHomeRuns">
   </div>
   <div class="mb-3">
-    <label for="updateHits" class="form-label">Hits</label>
-    <input type="text" class="form-control" id="updateHits">
+    <label for="addHits" class="form-label">Hits</label>
+    <input type="text" class="form-control" id="addHits">
   </div>
-    <div class="mb-3">
-    <label for="updateAvg" class="form-label">Batting Avg</label>
-    <input type="text" class="form-control" id="updateAvg">
-  </div>
-    <div class="mb-3">
-    <label for="updateHr" class="form-label">Home Runs</label>
-    <input type="text" class="form-control" id="updateHr">
-  </div>
-  </div>
-    <div class="mb-3">
-    <label for="updateRbis" class="form-label">RBIs</label>
-    <input type="text" class="form-control" id="updateRbis">
+  <div class="mb-3">
+    <label for="addRBIs" class="form-label">RBIs</label>
+    <input type="text" class="form-control" id="addRBIs">
   </div>
   <button type="submit" class="btn btn-danger">Submit</button>
-</form> 
-<br>
-<form class="bg-light deletePlayer">
-  <div class="mb-3">
-    <h2>Delete a Player</h2>
-    <label for="deleteName" class="form-label">Player Last Name</label>
-    <input type="text" class="form-control" id="deleteName">
-  </div>
-  <button type="submit" class="btn btn-danger">Submit</button>
-</form>  
+</form>
 
-<script src="../public/js/profile.js"></script>
+
+<div id="playerList">
+  {{#each players}}
+    <div class="player" data-player-id="{{ id }}">
+      <p>Name: {{ name }}</p>
+      <p>Position: {{ position }}</p>
+      <p>Batting Average: {{ battingAverage }}</p>
+      <p>Home Runs: {{ homeRuns }}</p>
+      <p>Hits: {{ hits }}</p>
+      <p>RBIs: {{ rbis }}</p>
+    </div>
+  {{/each}}
+</div>
+{{/if}}
+
+<script src="./js/profile.js"></script>

@@ -21,11 +21,8 @@ Lineup.belongsTo(Manager, {
 });
 
 Player.belongsToMany(Lineup, { 
-  through: 'PlayerLineup' 
-});
-
-Lineup.belongsToMany(Player, { 
-  through: 'PlayerLineup' 
+  through: 'LineupPlayer', 
+  foreignKey: 'player_id' 
 });
 
 module.exports = { Manager, Player, Lineup };

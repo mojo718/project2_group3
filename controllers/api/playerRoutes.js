@@ -14,7 +14,7 @@ const logger = winston.createLogger({
     ]
   });
 
-router.post('/', withAuth, async (req, res) => {
+  router.post('/', withAuth, async (req, res) => {
     try {
         const newPlayer = await Player.create({
             ...req.body,
@@ -23,8 +23,8 @@ router.post('/', withAuth, async (req, res) => {
         res.status(200).json(newPlayer);
         logger.info('Successfully created a new player');
     } catch (err) {
-        res.status(400).json(err);
         logger.error(`Error occurred while creating a new player: ${err}`);
+        res.status(400).json({ error: 'Failed to create a new player. Please try again later.' });
     }
 });
 
@@ -83,7 +83,7 @@ router.delete('/:id', withAuth, async (req, res) => {
     try {
         const player = await Player.destroy({
             where: {
-                name: req.body.name,
+                id: req.params.id,
                 manager_id: req.session.manager_id,
             },
         });
@@ -92,10 +92,10 @@ router.delete('/:id', withAuth, async (req, res) => {
             return;
         }
         res.status(200).json(player);
-        logger.info(`Successfully deleted player with name: ${req.body.name}`);
+        logger.info(`Successfully deleted player with id ${req.params.id}`);
     } catch (err) {
         res.status(500).json(err);
-        logger.error(`Error occurred while deleting player with name: ${req.body.id}: ${err}`);
+        logger.error(`Error occurred while deleting player with id ${req.params.id}: ${err}`);
     }
 });
 
