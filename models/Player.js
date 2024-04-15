@@ -14,10 +14,6 @@ Player.init(
       type: DataTypes.STRING,
       allowNull: false
     },
-    team_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
     position: {
       type: DataTypes.STRING,
       allowNull: false
