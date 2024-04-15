@@ -3,6 +3,7 @@
  <div class="row text-center">
 <h1>Your Lineups</h1>
 <br>
+{{#if lineups.length }}
 {{#each lineups as |lineup| }}
 <div class="row">
   <table class="table table-hover table-primary table-striped">
@@ -64,5 +65,10 @@
 </div>
 <br>
 {{/each}}
+{{else}}
+<div class="row text-center">
+  <h1 style="color:red">No Lineups created. Plesae create a lineup first.</h1>
+</div>
+{{/if}}
 
 <script src="./js/homepage.js"></script>
