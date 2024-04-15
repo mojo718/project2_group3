@@ -1,34 +1,68 @@
 <button class="btn btn-primary" id="createLineup">Create New Lineup</button>
-
-{{#each lineups as |lineup| }}
+<br>
  <div class="row text-center">
-  <h1>{{manager.name}}'s Team</h1>
-</div>
+<h1>Your Lineups</h1>
+<br>
+{{#each lineups as |lineup| }}
 <div class="row">
   <table class="table table-hover table-primary table-striped">
   <thead>
     <tr>
       <th scope="col">Order</th>
       <th scope="col">Name</th>
-      <th scope="col">Position</th>
+      <th scope="col">Game Date</th>
     </tr>
   </thead>
   <tbody>
-
-    {{#each players as |player| }}
     <tr>
-      <th scope="row">{{player.position}}</th>
-      <td>{{player.name}}</td>
-      <td>{{player.hits}}</td>
-      <td>{{player.battingAverage}}</td>
-      <td>{{player.homeRuns}}</td>
-      <td>{{player.rbis}}</td>
+      <th scope="row">1</th>
+      <td>{{ player1 }}</td>
+      <td> {{ game_date }} </td>
     </tr>
-    {{/each}}
-
+       <tr>
+      <th scope="row">2</th>
+      <td>{{ player2 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">3</th>
+      <td>{{ player3 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">4</th>
+      <td>{{ player4 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">5</th>
+      <td>{{ player5 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">6</th>
+      <td>{{ player6 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">7</th>
+      <td>{{ player7 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">8</th>
+      <td>{{ player8 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
+       <tr>
+      <th scope="row">9</th>
+      <td>{{ player9 }}</td>
+      <td> {{ game_date }} </td>
+    </tr>
   </tbody>
 </table>
 </div>
+<br>
 {{/each}}
 
-<script src="../public/js/homepage.js"></script>
+<script src="./js/homepage.js"></script>

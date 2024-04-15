@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const winston = require('winston');
-const { Lineup, Player } = require('../../models');
+const { Lineup, Player, Manager } = require('../../models');
 const withAuth = require('../../utils/auth');
 const path = require('path');
 
@@ -14,15 +14,17 @@ const logger = winston.createLogger({
 
 router.post('/', withAuth, async (req, res) => {
     try {
-        
-        let lineupTeam = [];
-        for (let i = 0; i < req.body.players.length; i++) {
-            let individual = { manager_id: req.session.manager_id, 
-            game_date: req.body.game_date, player_name: req.body.players[i] };
-            lineupTeam = lineupTeam.push(individual);
-        }
-
-        const newLineup = await Lineup.bulkCreate(lineupTeam);
+        let lineupTeam = { player1: req.body.player1,
+            player2: req.body.player2, player3: req.body.player3,
+            player4: req.body.player4,
+            player5: req.body.player5,
+            player6: req.body.player6,
+            player7: req.body.player7,
+            player8: req.body.player8,
+            player9: req.body.player9,
+            game_date: req.body.game_date,
+              manager_id: req.session.manager_id};
+        const newLineup = await Lineup.create(lineupTeam);
         res.status(200).json(newLineup);
         logger.info('Successfully created a new lineup');
     } catch (err) {

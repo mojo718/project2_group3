@@ -11,7 +11,39 @@ Lineup.init(
       primaryKey: true,
       autoIncrement: true,
     },
-   player_name: {
+   player1: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player2: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player3: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player4: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player5: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player6: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player7: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player8: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    player9: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
