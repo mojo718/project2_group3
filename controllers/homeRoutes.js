@@ -40,15 +40,22 @@ router.get('/', async (req, res) => {
 
 router.get('/profile', withAuth, async (req, res) => {
   try {
+    const playerData = await Player.findAll({
+      where: {
+        manager_id: req.session.manager_id},
+    });
+
+    const players = playerData.map((player) => player.get({ plain: true }));
+
     const managerData = await Manager.findByPk(req.session.manager_id, {
       attributes: { exclude: ['password'] },
-      include: [{ model: Player, model: Lineup }],
+      include: { model: Player},
     });
 
     const manager = managerData.get({ plain: true });
 
     res.render('profile', {
-      ...manager,
+      manager, players,
       logged_in: true
     });
     logger.info('Profile rendered successfully');
