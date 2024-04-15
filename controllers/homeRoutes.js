@@ -15,6 +15,7 @@ const logger = winston.createLogger({
   });
 router.get('/', async (req, res) => {
   try {
+    if( req.session.logged_in ){
     const lineupData = await Lineup.findAll({
       where: {
         manager_id: req.session.manager_id,
@@ -22,10 +23,15 @@ router.get('/', async (req, res) => {
     });
     const lineups = lineupData.map((lineup) => lineup.get({ plain: true }));
     res.render('homepage', {
-     ...lineups, 
+      lineups, 
       logged_in: req.session.logged_in 
     });
     logger.info('Homepage rendered successfully')
+    }
+
+    logger.info('User not signed in, redirecting to login')
+    res.render('login');
+    
   } catch (err) {
     res.status(500).json(err);
     logger.error(`Error occurred while rendering home: ${err}`);
@@ -54,7 +60,7 @@ router.get('/profile', withAuth, async (req, res) => {
 
 router.get('/lineup', withAuth, async (req, res) => {
   try {
-    const playerData = await Player.findAll(req.session.manager_id, {
+    const playerData = await Player.findAll({
       where: {
         manager_id: req.session.manager_id
       },
