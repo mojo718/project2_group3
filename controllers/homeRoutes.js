@@ -15,7 +15,16 @@ const logger = winston.createLogger({
   });
 router.get('/', async (req, res) => {
   try {
-    res.render('homepage');
+    const lineupData = await Lineup.findAll({
+      where: {
+        manager_id: req.session.manager_id,
+    },
+    });
+    const lineups = lineupData.map((lineup) => lineup.get({ plain: true }));
+    res.render('homepage', {
+     ...lineups, 
+      logged_in: req.session.logged_in 
+    });
     logger.info('Homepage rendered successfully')
   } catch (err) {
     res.status(500).json(err);
@@ -25,7 +34,7 @@ router.get('/', async (req, res) => {
 
 router.get('/profile', withAuth, async (req, res) => {
   try {
-    const managerData = await Manager.findByPk(req.session.user_id, {
+    const managerData = await Manager.findByPk(req.session.manager_id, {
       attributes: { exclude: ['password'] },
       include: [{ model: Player, model: Lineup }],
     });
@@ -40,6 +49,27 @@ router.get('/profile', withAuth, async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
     logger.error(`Error occurred while rendering profile: ${err}`);
+  }
+});
+
+router.get('/lineup', withAuth, async (req, res) => {
+  try {
+    const playerData = await Player.findAll(req.session.manager_id, {
+      where: {
+        manager_id: req.session.manager_id
+      },
+    });
+
+    const players = playerData.map((player) => player.get({ plain: true }));
+
+    res.render('lineup', {
+      ...players,
+      logged_in: true
+    });
+    logger.info('Lineup Rendered Successfully');
+  } catch (err) {
+    res.status(500).json(err);
+    logger.error(`Error occurred while rendering lineup: ${err}`);
   }
 });
 
